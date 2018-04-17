@@ -1,0 +1,8 @@
+`anywhere_expert_transcripts.csv` contains chat transcripts with corresponding grades. There are 2025 rows of data. The data is organized into x_i/y_i pairs corresponding to question Q_i. x_i contains the answer to question Q_i, y_i contains the grade.
+
+| x/y | Question | Grade |
+| --- | --- | --- |
+| 1 | Write your answer as if you were talking to the customer. You can answer on multiple lines and make your answer as long and detailed as needed to help the customer through all of the steps.Customer: How do i change the ringtone of a specific contact on my galaxy s8+?How would you help this customer solve their issue? | {0, 1} |
+| 2 | Write your answer as if you were talking to the customer. You can answer on multiple lines and make your answer as long and detailed as needed to help the customer through all of the steps.Customer: my screen shut off while my phone was charging and now it won't come back on. i have an iPhone 7.How would you help this customer solve their issue? | {0, 1} |
+| 3 | Write your answer as if you were talking to the customer. You can answer on multiple lines and make your answer as long and detailed as needed to help the customer through all of the steps.Customer: i don't know how to add my Outlook.com email to my new iphone. i have the newst ios (11 i think)How would you help this customer solve their issue? | {0, 1} |
+| 4 | Nice job! Now, let's change it up for the last question. Please answer this one in several sentences or more. (Hint: the longer, the better!)What do you think you'll be doing as an Verizon Messaging Expert and why do you want to be an Verizon Messaging Expert? | 0-100 |
