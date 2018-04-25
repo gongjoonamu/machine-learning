@@ -9,16 +9,26 @@ import numpy as np
 import tensorflow as tf
 import os
 import sys
-from utils.pre_processing import get_data
+import argparse
+from utils.pre_processing import get_data, get_output_file_name
 
 tf.logging.set_verbosity(tf.logging.INFO)
+
+parser = argparse.ArgumentParser(description='Bag of Words Classifier for Anywhere Expert Transcripts')
+parser.add_argument('question', type=int, help="which question in dataset to use for training")
+parser.add_argument('output', type=str, help="output directory to save model")
+parser.add_argument('-i', "--input", type=str, help="input directory containing training data", default="data", required=False)
+parser.add_argument('-s', '--steps', type=int, help="number of steps to use for training", default=1e4, required=False)
+
+args = parser.parse_args()
 
 MAX_DOCUMENT_LENGTH = 300  # length of word vector consisting of word IDs
 EMBEDDING_SIZE = 8  # input layer, ~=log_2(MAX_DOCUMENT_LENGTH)
 WORDS_FEATURE = 'words'  # input tensor name
-STEPS = 1e3
-QUESTION = 1
-
+STEPS = args.steps
+QUESTION = args.question
+INPUT_DIR = args.input
+OUTPUT_DIR = args.output
 
 def bag_of_words_model(num_buckets):
     bow_column = tf.feature_column.categorical_column_with_identity(
@@ -31,7 +41,7 @@ def bag_of_words_model(num_buckets):
     )
     return model
 
-x_train, x_test, y_train, y_test = get_data("data", QUESTION, preprocess=True)
+x_train, x_test, y_train, y_test = get_data(INPUT_DIR, QUESTION, preprocess=True)
 
 # Process vocabulary
 vocab_processor = tf.contrib.learn.preprocessing.VocabularyProcessor(
@@ -70,3 +80,10 @@ test_input_fn = tf.estimator.inputs.numpy_input_fn(
 
 scores = classifier.evaluate(input_fn=test_input_fn)
 print('Accuracy (test): {:.5f}'.format(scores['accuracy']))
+
+def serving_input_fn():
+    feature_spec = {WORDS_FEATURE: tf.FixedLenFeature(dtype=tf.int64, shape=[MAX_DOCUMENT_LENGTH])}
+    return tf.estimator.export.build_parsing_serving_input_receiver_fn(feature_spec)()
+
+model_output_dir = os.path.join(OUTPUT_DIR, get_output_file_name(QUESTION))
+classifier.export_savedmodel(model_output_dir, serving_input_fn)

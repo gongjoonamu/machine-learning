@@ -8,7 +8,7 @@ from sagemaker.tensorflow.tensorflow_serving.apis import classification_pb2
 from utils.pre_processing import preprocess_data
 
 app = Flask(__name__)
-ENDPOINT_NAME = 'sagemaker-tensorflow-2018-04-24-18-54-38-930'
+ENDPOINT_NAME = "sagemaker-tensorflow-ae-onboarding-classifier-endpoint"
 
 
 def create_feature(v):
@@ -32,8 +32,8 @@ def transform(msg, question):
     return list(msg_transform)[0]
 
 
-@app.route("/prediction/<int:question>", methods=['POST'])
-def prediction(question):
+@app.route("/predict/<int:question>", methods=['POST'])
+def predict(question):
     if request.is_json:
         msg = request.get_json()
         predictor = RealTimePredictor(endpoint=ENDPOINT_NAME,
