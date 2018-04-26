@@ -42,3 +42,6 @@ def predict(question):
         features = {'words': create_feature(transform(msg, question))}
         req = build_request("generic_model", features)
         return predictor.predict(req).decode('utf-8')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
