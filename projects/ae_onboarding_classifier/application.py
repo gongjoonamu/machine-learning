@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flasgger import Swagger
 import tensorflow as tf
 import os
 from sagemaker.tensorflow.predictor import tf_serializer, tf_deserializer
@@ -8,8 +9,8 @@ from sagemaker.tensorflow.tensorflow_serving.apis import classification_pb2
 from utils.pre_processing import preprocess_data
 
 app = Flask(__name__)
+swagger = Swagger(app)
 ENDPOINT_NAME = "sagemaker-tensorflow-ae-onboarding-classifier-endpoint"
-
 
 def create_feature(v):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=v))
@@ -34,6 +35,18 @@ def transform(msg, question):
 
 @app.route("/predict/<int:question>", methods=['POST'])
 def predict(question):
+    '''
+    Predicts the grade for a given conversation question
+    ---
+    parameters:
+        - name: question
+          in: path
+          type: int
+          required: true
+    responses:
+        200:
+            description: A grade for the conversations
+    '''
     if request.is_json:
         msg = request.get_json()
         predictor = RealTimePredictor(endpoint=ENDPOINT_NAME,
@@ -42,6 +55,21 @@ def predict(question):
         features = {'words': create_feature(transform(msg, question))}
         req = build_request("generic_model", features)
         return predictor.predict(req).decode('utf-8')
+
+@app.route('/health', methods=['GET'])
+def health():
+    '''
+    Health check
+    ---
+    responses:
+        200:
+            description: Successful health check response
+    '''
+    return 'OK!'
+
+@app.route('/', methods=['GET'])
+def hello_world():
+    return 'OK!'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
