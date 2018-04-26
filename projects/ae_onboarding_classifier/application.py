@@ -9,7 +9,7 @@ from sagemaker.tensorflow.tensorflow_serving.apis import classification_pb2
 from utils.pre_processing import preprocess_data
 
 app = Flask(__name__)
-swagger = Swagger(app)
+swagger = Swagger(app)  # Swagger docs served at /apidocs
 ENDPOINT_NAME = "sagemaker-tensorflow-ae-onboarding-classifier-endpoint"
 
 def create_feature(v):
