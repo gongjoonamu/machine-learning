@@ -68,7 +68,7 @@ def health():
     return 'OK!'
 
 @app.route('/', methods=['GET'])
-def hello_world():
+def root():
     return 'OK!'
 
 if __name__ == '__main__':
