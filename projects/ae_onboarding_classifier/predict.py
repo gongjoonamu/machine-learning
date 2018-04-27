@@ -14,8 +14,8 @@ def _create_example(features):
 
 class Predict:
     def __init__(self, question):
-        model_dir = os.path.join(SAVED_MODELS_DIR, get_model_name(question))
-        vocab_file = os.path.join(DATA_DIR, get_vocab_file(question))
+        model_dir = os.path.join('.', SAVED_MODELS_DIR, get_model_name(question))
+        vocab_file = os.path.join('.', DATA_DIR, get_vocab_file(question))
         self._vocab_processor = vocab_processor = tf.contrib.learn.preprocessing.VocabularyProcessor.restore(
             vocab_file)
         self._predictor = tf.contrib.predictor.from_saved_model(model_dir)
