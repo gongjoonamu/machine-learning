@@ -10,7 +10,7 @@ import tensorflow as tf
 import os
 import sys
 import argparse
-from utils.pre_processing import get_data, get_output_file_name
+from utils.pre_processing import get_data, get_model_name
 
 tf.logging.set_verbosity(tf.logging.INFO)
 
@@ -85,5 +85,5 @@ def serving_input_fn():
     feature_spec = {WORDS_FEATURE: tf.FixedLenFeature(dtype=tf.int64, shape=[MAX_DOCUMENT_LENGTH])}
     return tf.estimator.export.build_parsing_serving_input_receiver_fn(feature_spec)()
 
-model_output_dir = os.path.join(OUTPUT_DIR, get_output_file_name(QUESTION))
+model_output_dir = os.path.join(OUTPUT_DIR, get_model_name(QUESTION))
 classifier.export_savedmodel(model_output_dir, serving_input_fn)

@@ -41,5 +41,8 @@ def get_data(training_dir, key, test_size=0.4, random_state=42, preprocess=True)
 
     return x_train, x_test, y_train, y_test
 
-def get_output_file_name(question):
+def get_model_name(question):
     return "model_question_{}".format(question)
+
+def get_vocab_file(question):
+    return "vocab_question_{}".format(question)

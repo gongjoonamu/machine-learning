@@ -17,8 +17,8 @@ def estimator_fn(run_config, params):
         bow_column, dimension=EMBEDDING_SIZE, combiner="sqrtn")
     return tf.estimator.LinearClassifier(
         feature_columns=[bow_embedding_column],
-        config=run_config
-        #loss_reduction=tf.losses.Reduction.SUM_BY_NONZERO_WEIGHTS #disabled due to old version of TF
+        config=run_config,
+        loss_reduction=tf.losses.Reduction.SUM_BY_NONZERO_WEIGHTS
     )
 
 def serving_input_fn(params):
@@ -31,9 +31,9 @@ def train_input_fn(training_dir, params):
     x_train, x_test, y_train, y_test = get_data(training_dir, question, preprocess=True)
     vocab_processor = tf.contrib.learn.preprocessing.VocabularyProcessor(
     MAX_DOCUMENT_LENGTH)
-    
+
     x_transform_train = vocab_processor.fit_transform(x_train)
-    #assert params["n_words"] == len(vocab_processor.vocabulary_)
+    assert params["n_words"] == len(vocab_processor.vocabulary_)
     x_train = np.array(list(x_transform_train))
 
     return tf.estimator.inputs.numpy_input_fn(
@@ -41,7 +41,7 @@ def train_input_fn(training_dir, params):
         y=y_train,
         batch_size=len(x_train),
         num_epochs=None,
-        shuffle=True)
+        shuffle=True)()
 
 def eval_input_fn(training_dir, params):
     """Returns input function that would feed the model during evaluation"""
@@ -50,12 +50,12 @@ def eval_input_fn(training_dir, params):
     vocab_processor = tf.contrib.learn.preprocessing.VocabularyProcessor(
     MAX_DOCUMENT_LENGTH)
     vocab_processor.fit(x_train)
-    
+
     x_transform_test = vocab_processor.transform(x_test)
     x_test = np.array(list(x_transform_test))
-    
+
     return tf.estimator.inputs.numpy_input_fn(
-        x={WORDS_FEATURE: x_test}, y=y_test, num_epochs=1, shuffle=False)
+        x={WORDS_FEATURE: x_test}, y=y_test, num_epochs=1, shuffle=False)()
 
 
 # pre_processing.py
