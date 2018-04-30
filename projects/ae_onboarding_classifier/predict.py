@@ -3,8 +3,8 @@ import numpy as np
 import os
 from utils.pre_processing import preprocess_data, get_model_name, get_vocab_file
 
-SAVED_MODELS_DIR = 'saved_models'
-DATA_DIR = 'data'
+SAVED_MODELS_DIR = '/src/saved_models'
+DATA_DIR = '/src/data'
 
 def _create_feature(val):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=val))

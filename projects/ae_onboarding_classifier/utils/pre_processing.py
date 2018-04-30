@@ -3,9 +3,11 @@ import re
 import os
 from sklearn.model_selection import train_test_split
 import numpy as np
+import nltk
 from nltk.corpus import stopwords
 
 FILE_NAME = "anywhere_expert_transcripts.csv"
+nltk.download('stopwords')
 
 def _filter_words(words):
     stops = stopwords.words("english")
