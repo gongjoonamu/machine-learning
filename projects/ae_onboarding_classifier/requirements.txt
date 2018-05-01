@@ -3,8 +3,5 @@ flasgger
 numpy
 scipy
 tensorflow
-google
-nltk
 scikit-learn
-sagemaker
 pandas
