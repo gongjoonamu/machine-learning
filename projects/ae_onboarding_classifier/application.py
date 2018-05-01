@@ -14,11 +14,32 @@ def predict(question):
     parameters:
         - name: question
           in: path
-          type: int
+          type: integer
           required: true
+        - name: body
+          in: body
+          schema:
+            required:
+              - msg
+            properties:
+              msg:
+                type: string
+                description: Conversation to grade
+    definitions:
+        Grade:
+          type: object
+          properties:
+            class:
+              type: integer
+              description: Boolean classification (1 or 0) indicating pass or fail
+            score:
+              type: number
+              description: Confidence in classification
     responses:
         200:
             description: A grade for the conversations
+            schema:
+              $ref: '#/definitions/Grade'
     '''
     if not request.is_json or question not in range(1, 4):
         abort(500)
